@@ -1,0 +1,94 @@
+@extends('admin.layouts.app')
+@section('title')Add Match  @endsection
+@section('style')
+    <style>
+        /* custom css here */
+    </style>
+@endsection
+@section('content')
+    <main id="main" class="main">
+        <div class="pagetitle">
+            <h5 class="fw-bold">Add Cricket Match Page</h5>
+            <nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.cricket.matches.list') }}">Matches List</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('admin.cricket_add.matches.add') }}">Match Add</a></li>
+                </ol>
+            </nav>
+        </div><!-- End Page Title -->
+        <section class="section">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <h5 class="card-title">Add Match</h5>
+                            </div>
+                            <div class="col-lg-6">
+                                <a href="{{ route('admin.cricket.matches.list') }}" class="bn float-end mt-3"  >Back to Matches List</a>
+                            </div>
+                        </div>
+                        <form action="{{ route('admin.cricket_add.matches.create') }}" method="post" id="categoryFrom" name="categoryFrom"  class="row g-3">
+                            @csrf
+                            <div class="col-md-6">
+                                <label for="team1" class="form-label" >Team A</label>
+                                <input type="text" id="team1" name="team1" value="{{ old('team1') }}" class="form-control " placeholder="Name" >
+                                @error('team1')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="team2" class="form-label" >Team B</label>
+                                <input type="text" id="team2" name="team2" value="{{ old('team2') }}" class="form-control " placeholder="Name" >
+                                @error('team2')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-select" name="status" id="status" >
+                                    <option selected disabled value="">--select--</option>
+                                    <option value="active">Active</option>
+                                    <option value="block">Block</option>
+                                </select>
+                                @error('status')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-12">
+                                <button class="bn "  type="submit">Create</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main><!-- End #main -->
+@endsection
+@section('script')
+    <script>
+        
+
+        // Slug 
+        $("#name").change(function() {
+            var element = $(this);
+            $("button[type='submit']").prop('disabled', true);
+            $.ajax({
+                type: "get",
+                url: "{{ route('getSulg') }}",
+                data: {
+                    title: element.val()
+                },
+                dataType: "json",
+                success: function(response) {
+                    $("button[type='submit']").prop('disabled', false);
+                    if (response['status'] == true) {
+                        $("#slug").val(response['slug']);
+                    }
+                }
+            });
+
+        });
+    </script>
+@endsection
